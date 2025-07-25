@@ -28,7 +28,7 @@ const NavigationButtons = ({ showBack = true, showHome = true }) => {
       }}
       transition={{ type: "spring", damping: 10, stiffness: 100 }}
     >
-      {showBack && (
+      {/* {showBack && (
         <motion.button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 bg-white bg-opacity-90 px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg text-orange-600 font-medium hover:bg-opacity-100 transition-all text-sm md:text-base"
@@ -38,7 +38,7 @@ const NavigationButtons = ({ showBack = true, showHome = true }) => {
           <ArrowLeft size={18} className="md:size-5" />
           <span className="hidden sm:inline">Back</span>
         </motion.button>
-      )}
+      )} */}
 
       {showHome && (
         <motion.button

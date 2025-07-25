@@ -1,26 +1,35 @@
 // src/pages/Home.jsx
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import Banner from "../components/Banner";
-import MovieCard from "../components/MovieCard";
 import { useState } from "react";
-import { ChevronDown, Search } from "lucide-react";
-import NavigationButtons from "../components/NavigationButtons";
+import MovieCard from "../components/MovieCard";
+import AdvertisementCarousel from "../components/AdvertisementCarousel";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [selectedDate, setSelectedDate] = useState("25");
-  const [showLanguageFilter, setShowLanguageFilter] = useState(false);
-  const [showFormatFilter, setShowFormatFilter] = useState(false);
-  const [showPriceFilter, setShowPriceFilter] = useState(false);
-  const [showShowtimeFilter, setShowShowtimeFilter] = useState(false);
-  const [premiumSeats, setPremiumSeats] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  // Initialize with Date object instead of string
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isHovering, setIsHovering] = useState(false);
 
-  const dates = [
-    { day: "Thu", date: "24" },
-    { day: "Fri", date: "25" },
-  ];
+  // Generate dates for next 7 days with proper month/year
+  const getDates = () => {
+    const dates = [];
+    const today = new Date();
+    for (let i = 0; i < 3; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      dates.push({
+        dateObj: date,
+        day: date.toLocaleString('en-US', { weekday: 'short' }),
+        date: date.getDate(),
+        month: date.toLocaleString('en-US', { month: 'short' }),
+        year: date.getFullYear()
+      });
+    }
+    return dates;
+  };
+
+  const dates = getDates();
 
   const movies = [
     {
@@ -39,7 +48,7 @@ const Home = () => {
       state: {
         movie: selectedMovie,
         timing,
-        date: selectedDate,
+        date: selectedDate.toLocaleDateString(),
       },
     });
   };
@@ -56,221 +65,76 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-400 to-orange-600">
-      {/* <NavigationButtons showHome={false} showBack={true} /> */}
+    <div
+      className={`min-h-screen bg-gradient-to-b from-gray-100 to-orange-200 transition-colors duration-300 ${isHovering ? 'bg-orange-100' : 'bg-white'}`}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      {/* Advertisement Carousel */}
+      <AdvertisementCarousel />
 
-      {/* Banner */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full"
-      >
-        <Banner />
-      </motion.div>
+      {/* Date Selection - Left Aligned */}
+      <div className="max-w-7xl mx-auto px-2 pt-2">
+        <div className="flex flex-col space-y-2">
 
-      {/* Filter Bar */}
-      <div className="bg-orange-500 shadow-sm p-4 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto">
           {/* Date Selection */}
-          <div className="flex items-center mb-4 overflow-x-auto pb-2 mt-2 scrollbar-hide">
-            {dates.map((dateObj) => (
-              <button
-                key={dateObj.date}
-                onClick={() => setSelectedDate(dateObj.date)}
-                className={`flex-shrink-0 mr-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                  selectedDate === dateObj.date
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                <div className="text-xs">{dateObj.day}</div>
-                <div className="font-bold">{dateObj.date}</div>
-              </button>
-            ))}
-          </div>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center overflow-x-auto pb-2 scrollbar-hide space-x-4">
 
-          {/* Filter Options */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-              <span className="text-sm font-medium text-white">Filter By</span>
+              <h3 className="text-md font-medium">Show Date:</h3>
 
-              {/* Language Filter */}
-              <div className="relative">
+              {/* Month and Year Display - Stacked */}
+              <div className="flex flex-col items-center shrink-0 justify-center">
+                <h3 className="text-sm text-orange-500 font-semibold">
+                  {selectedDate.toLocaleString('default', { month: 'long' })}
+                </h3>
+                <h3 className="text-lg font-semibold">
+                  {selectedDate.toLocaleString('default', { year: 'numeric' })}
+                </h3>
+              </div>
+
+              {/* Date Buttons */}
+              {dates.map((dateObj) => (
                 <button
-                  onClick={() => setShowLanguageFilter(!showLanguageFilter)}
-                  className="flex items-center space-x-1 text-sm text-white hover:text-gray-200"
-                >
-                  <span>Language</span>
-                  <ChevronDown
-                    size={16}
-                    className={`transition-transform ${
-                      showLanguageFilter ? "rotate-180" : ""
+                  key={dateObj.date}
+                  onClick={() => setSelectedDate(dateObj.dateObj)}
+                  className={`flex-shrink-0 px-4 py-2 rounded-lg font-medium transition-all flex flex-col items-center ${selectedDate.toDateString() === dateObj.dateObj.toDateString()
+                    ? "bg-orange-500 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
-                  />
-                </button>
-                {showLanguageFilter && (
-                  <div className="absolute z-10 mt-2 w-40 bg-white rounded-md shadow-lg py-1">
-                    {["All", "Tamil", "Hindi", "English"].map((lang) => (
-                      <button
-                        key={lang}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setShowLanguageFilter(false)}
-                      >
-                        {lang}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Format Filter */}
-              <div className="relative">
-                <button
-                  onClick={() => setShowFormatFilter(!showFormatFilter)}
-                  className="flex items-center space-x-1 text-sm text-white hover:text-gray-200"
                 >
-                  <span>Format</span>
-                  <ChevronDown
-                    size={16}
-                    className={`transition-transform ${
-                      showFormatFilter ? "rotate-180" : ""
-                    }`}
-                  />
+                  <div className="text-xs">{dateObj.day}</div>
+                  <div className="font-bold">{dateObj.date}</div>
                 </button>
-                {showFormatFilter && (
-                  <div className="absolute z-10 mt-2 w-40 bg-white rounded-md shadow-lg py-1">
-                    {["All", "2D", "3D", "IMAX"].map((format) => (
-                      <button
-                        key={format}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setShowFormatFilter(false)}
-                      >
-                        {format}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Price Filter */}
-              <div className="relative hidden sm:block">
-                <button
-                  onClick={() => setShowPriceFilter(!showPriceFilter)}
-                  className="flex items-center space-x-1 text-sm text-white hover:text-gray-200"
-                >
-                  <span>Price</span>
-                  <ChevronDown
-                    size={16}
-                    className={`transition-transform ${
-                      showPriceFilter ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-                {showPriceFilter && (
-                  <div className="absolute z-10 mt-2 w-40 bg-white rounded-md shadow-lg py-1">
-                    {["All", "Under ₹200", "₹200-₹300", "Over ₹300"].map(
-                      (price) => (
-                        <button
-                          key={price}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setShowPriceFilter(false)}
-                        >
-                          {price}
-                        </button>
-                      )
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Showtime Filter */}
-              <div className="relative hidden sm:block">
-                <button
-                  onClick={() => setShowShowtimeFilter(!showShowtimeFilter)}
-                  className="flex items-center space-x-1 text-sm text-white hover:text-gray-200"
-                >
-                  <span>Showtime</span>
-                  <ChevronDown
-                    size={16}
-                    className={`transition-transform ${
-                      showShowtimeFilter ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-                {showShowtimeFilter && (
-                  <div className="absolute z-10 mt-2 w-40 bg-white rounded-md shadow-lg py-1">
-                    {["All", "Morning", "Afternoon", "Evening", "Night"].map(
-                      (time) => (
-                        <button
-                          key={time}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setShowShowtimeFilter(false)}
-                        >
-                          {time}
-                        </button>
-                      )
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Premium Seats */}
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="premium"
-                  checked={premiumSeats}
-                  onChange={(e) => setPremiumSeats(e.target.checked)}
-                  className="rounded"
-                />
-                <label htmlFor="premium" className="text-sm text-white">
-                  Premium Seats
-                </label>
-              </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="bg-orange-500 p-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="relative">
-            <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white"
-              size={20}
-            />
-            <input
-              type="text"
-              placeholder="Search movies..."
-              className="w-full pl-10 pr-4 py-2 border border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white bg-opacity-90"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-
       {/* Movie Cards */}
-      <div className="max-w-7xl mx-auto p-4">
+      <div className="max-w-7xl mx-auto p-3">
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
-          className="space-y-4"
+          className="space-y-6"
         >
           {movies.map((movie) => (
             <motion.div
               key={movie.id}
               variants={{
-                hidden: { opacity: 0, x: -50 },
-                show: { opacity: 1, x: 0 },
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0 },
               }}
               whileHover={{ scale: 1.005 }}
               className="w-full"
             >
-              <MovieCard movie={movie} onBookNow={handleBookNow} />
+              <MovieCard
+                movie={movie}
+                onBookNow={handleBookNow}
+                selectedDate={selectedDate}
+              />
             </motion.div>
           ))}
         </motion.div>

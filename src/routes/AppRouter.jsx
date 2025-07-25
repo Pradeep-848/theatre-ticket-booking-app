@@ -2,10 +2,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
 import SeatSelection from "../pages/SeatSelection";
-import UserDetails from "../pages/UserDetails";
-import Payment from "../pages/Payment";
-import Confirmation from "../pages/Confirmation";
 import Footer from "../components/Footer";
+import TicketPage from "../pages/TiceketPage";
 
 function App() {
   return (
@@ -15,12 +13,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/select-seats" element={<SeatSelection />} />
-            <Route path="/user-details" element={<UserDetails />} />
-            <Route path="/payment" element={<Payment />} />
-            <Route path="/confirmation" element={<Confirmation />} />
+            <Route path="/get-tickets" element={<TicketPage />} />
           </Routes>
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </Router>
   );
