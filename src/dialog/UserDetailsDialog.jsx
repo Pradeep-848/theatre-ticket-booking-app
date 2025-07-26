@@ -9,16 +9,16 @@ const UserDetailsDialog = ({
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+      animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
+      exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+      className="fixed inset-0 bg-black/30 bg-opacity-20 flex items-center justify-center z-50 p-4"
     >
       <motion.div
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
-        className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl"
+        className="bg-white/90 backdrop-blur-lg rounded-xl p-6 max-w-md w-full shadow-2xl border border-white/20"
       >
         <div className="flex justify-between items-start mb-4">
           <h3 className="text-2xl font-bold text-orange-900">
@@ -75,7 +75,7 @@ const UserDetailsDialog = ({
               onChange={handleChange}
               className="p-2 border-2 border-orange-200 rounded-lg focus:border-orange-500"
               required
-              pattern="[0-9]{10}"
+              //pattern="[0-9]{10}"
             />
           </div>
 

@@ -1,15 +1,15 @@
 // src/pages/TicketPage.jsx
-import { useLocation, useNavigate } from "react-router-dom";
+import { useToast } from "../components/Toast";
+import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { QrCode, Download, Share2, Calendar, MapPin, Users, Ticket } from "lucide-react";
 import Lottie from "lottie-react";
 import NavigationButtons from "../components/NavigationButtons";
-import ticketAnimationData from "../utils/ticketAnimationData";
+import celebrationAnimation from "../assets/json/lottie.json"
 
 const TicketPage = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [showTicket, setShowTicket] = useState(false);
   const [showQR, setShowQR] = useState(false);
 
@@ -33,7 +33,7 @@ const TicketPage = () => {
 
   const handleDownload = () => {
     // Simulate download functionality
-    alert("Ticket downloaded successfully!");
+    useToast.success("Ticket downloaded successfully!");
   };
 
   const handleShare = () => {
@@ -45,7 +45,7 @@ const TicketPage = () => {
         url: window.location.href,
       });
     } else {
-      alert("Ticket shared successfully!");
+      useToast.success("Ticket shared successfully!");
     }
   };
 
@@ -100,16 +100,18 @@ const TicketPage = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-8"
         >
-          <div className="w-24 h-1 mx-auto mb-4">
-            <Lottie
-              animationData={ticketAnimationData}
-              loop={true}
-              autoplay={true}
-            />
+          <div className="flex justify-center items-center gap-2 mb-4">
+            <div className="w-12 h-12">
+              <Lottie
+                animationData={celebrationAnimation}
+                loop={true}
+                autoplay={true}
+              />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-800">
+              Booking Confirmed!
+            </h1>
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            🎉 Booking Confirmed!
-          </h1>
           <p className="text-xl text-gray-600">
             Your movie tickets are ready
           </p>

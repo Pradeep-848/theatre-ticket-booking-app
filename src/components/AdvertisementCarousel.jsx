@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 const AdvertisementCarousel = () => {
   const ads = [
     "src/assets/images/advertisements/adv1.jpg",
+    "src/assets/images/advertisements/adv4.jpg",
     "src/assets/images/advertisements/adv2.jpg",
     "src/assets/images/advertisements/adv3.jpg",
   ];
@@ -20,17 +21,17 @@ const AdvertisementCarousel = () => {
 
   return (
     <div className="flex justify-center px-4 py-6">
-      <div className="relative w-full max-w-7xl h-64 overflow-hidden rounded-xl shadow-lg border border-gray-200">
+      <div className="relative w-full max-w-8xl h-64 overflow-hidden rounded-xl shadow-lg border border-gray-200">
         {ads.map((ad, index) => (
           <motion.img
             key={index}
             src={ad}
             alt={`Advertisement ${index + 1}`}
-            className="absolute w-full h-full object-cover"
+            className="absolute w-full h-full object-fill"
             initial={{ opacity: 0 }}
             animate={{
               opacity: index === currentAd ? 1 : 0,
-              transition: { duration: 1 }
+              transition: { duration: 1 },
             }}
           />
         ))}
@@ -41,7 +42,8 @@ const AdvertisementCarousel = () => {
             <motion.button
               key={index}
               onClick={() => setCurrentAd(index)}
-              className={`w-3 h-3 rounded-full ${index === currentAd ? 'bg-white' : 'bg-gray-300'}`}
+              className={`w-3 h-3 rounded-full ${index === currentAd ? "bg-white" : "bg-gray-300"
+                }`}
               whileHover={{ scale: 1.2 }}
             />
           ))}
@@ -49,7 +51,9 @@ const AdvertisementCarousel = () => {
 
         {/* Left/Right Navigation Arrows */}
         <button
-          onClick={() => setCurrentAd((prev) => (prev - 1 + ads.length) % ads.length)}
+          onClick={() =>
+            setCurrentAd((prev) => (prev - 1 + ads.length) % ads.length)
+          }
           className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-full bg-white"
         >
           <ChevronLeft className="text-orange-400" />

@@ -12,7 +12,7 @@ const SeatLayout = ({ selectedSeats, onSeatSelect }) => {
       animate={{ opacity: 1 }}
       transition={{ delay: 0.3 }}
     >
-      <div className="mt-8 min-w-max flex flex-col gap-4 items-center">
+      <div className="mt-4 min-w-max flex flex-col gap-4 items-center">
         {rows.map((row) => (
           <div key={row} className="flex gap-3">
             {Array.from({ length: seatsPerRow }, (_, i) => {

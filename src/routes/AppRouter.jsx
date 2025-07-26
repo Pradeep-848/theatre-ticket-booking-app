@@ -3,11 +3,13 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
 import SeatSelection from "../pages/SeatSelection";
 import Footer from "../components/Footer";
-import TicketPage from "../pages/TiceketPage";
+import TicketPage from "../pages/TicketPage";
+import Toast from "../components/Toast"
 
 function App() {
   return (
     <Router>
+      <Toast />
       <div className="flex flex-col min-h-screen">
         <div className="flex-grow">
           <Routes>
